@@ -1,0 +1,110 @@
+<html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QR Code One-Word Quiz</title>
+</head>
+<body bgcolor=green text=white><font face="monotype corsiva" size=7><font size=7><font size=7><font size=7><font size=7><font size=7><center>
+  <h1>QR Code One-Word Quiz</h1>
+  <p>Type a single word answer. Case doesn’t matter.</p>
+
+  <div id="quiz">
+    <p id="question"></p>
+    <input id="answer" type="text" placeholder="Your one-word answer">
+    <button id="submit">Submit</button>
+    <p id="feedback"></p>
+    <p>Question <span id="idx">1</span> / <span id="total">5</span> — Score: <span id="score">0</span></p>
+  </div>
+
+  <div id="done" style="display:none;">
+    <h2>Quiz complete!</h2>
+    <p>You scored <span id="finalScore">0</span> out of <span id="finalTotal">5</span>.</p>
+    <button id="retry">Play Again</button>
+  </div>
+
+  <script>
+    const QUESTIONS = [
+      { q: 'What does the “Q” in QR code stand for?', a: 'quick' },
+      { q: 'Which country invented the QR code?', a: 'japan' },
+      { q: 'What device is most commonly used to scan QR codes?', a: 'smartphone' },
+      { q: 'What shape are the modules (small units) inside a QR code?', a: 'square' },
+      { q: 'What is the main purpose of a QR code?', a: 'information' }
+    ];
+
+    let i = 0, score = 0;
+
+    const qEl = document.getElementById('question');
+    const ansEl = document.getElementById('answer');
+    const submitBtn = document.getElementById('submit');
+    const feedbackEl = document.getElementById('feedback');
+    const idxEl = document.getElementById('idx');
+    const totalEl = document.getElementById('total');
+    const scoreEl = document.getElementById('score');
+    const quizEl = document.getElementById('quiz');
+    const doneEl = document.getElementById('done');
+    const finalScoreEl = document.getElementById('finalScore');
+    const finalTotalEl = document.getElementById('finalTotal');
+    const retryBtn = document.getElementById('retry');
+
+    totalEl.textContent = QUESTIONS.length;
+
+    function showQuestion() {
+      qEl.textContent = QUESTIONS[i].q;
+      idxEl.textContent = i + 1;
+      feedbackEl.textContent = '';
+      ansEl.value = '';
+      ansEl.focus();
+    }
+
+    function normalize(s) {
+      return s.trim().toLowerCase().replace(/\s+/g, '');
+    }
+
+    function submit() {
+      const user = normalize(ansEl.value);
+      if (!user) return;
+      const correct = QUESTIONS[i].a;
+      if (user === correct) {
+        score++;
+        feedbackEl.textContent = 'Correct!';
+      } else {
+        feedbackEl.textContent = 'Wrong. Correct answer: ' + correct;
+      }
+      scoreEl.textContent = score;
+
+      setTimeout(() => {
+        i++;
+        if (i < QUESTIONS.length) {
+          showQuestion();
+        } else {
+          finish();
+        }
+      }, 2000);
+    }
+
+    function finish() {
+      quizEl.style.display = 'none';
+      doneEl.style.display = 'block';
+      finalScoreEl.textContent = score;
+      finalTotalEl.textContent = QUESTIONS.length;
+    }
+
+    function reset() {
+      i = 0;
+      score = 0;
+      scoreEl.textContent = '0';
+      doneEl.style.display = 'none';
+      quizEl.style.display = 'block';
+      showQuestion();
+    }
+
+    submitBtn.addEventListener('click', submit);
+    ansEl.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+    retryBtn.addEventListener('click', reset);
+
+    showQuestion();
+  </script>
+</font></font></font></font></font></font>
+</center>
+</body>
+</html>
